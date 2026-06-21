@@ -149,6 +149,80 @@ footer{text-align:center;padding:20px;font-family:'Cormorant Garamond',serif;fon
 
 .crown{display:inline-block;animation:crownFloat 2.5s ease-in-out infinite;}
 @keyframes crownFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-6px) rotate(3deg)}}
+
+/* ── Cumul global ── */
+.global-section{
+  width:100%; max-width:1100px; margin:0 auto 56px;
+  opacity:0; animation:fadeUp 1s 2s forwards;
+}
+.global-band{
+  border:1px solid rgba(201,168,76,.2);
+  border-radius:20px;
+  background:rgba(255,255,255,.025);
+  backdrop-filter:blur(12px);
+  overflow:hidden;
+}
+.global-header{
+  text-align:center;
+  padding:22px 20px 14px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  position:relative;
+}
+.global-header::before{
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(201,168,76,.06),transparent 60%);
+  pointer-events:none;
+}
+.global-eyebrow{
+  font-size:9px; letter-spacing:.25em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:6px;
+}
+.global-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(18px,3vw,26px);
+  font-weight:700; color:var(--gold);
+  letter-spacing:.04em;
+}
+.global-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+.global-stat{
+  padding:28px 24px;
+  text-align:center;
+  position:relative;
+}
+.global-stat:first-child{
+  border-right:1px solid rgba(255,255,255,.06);
+}
+.global-stat-icon{
+  font-size:28px; margin-bottom:10px; display:block;
+  filter:drop-shadow(0 2px 8px rgba(201,168,76,.3));
+}
+.global-stat-val{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,5vw,48px);
+  font-weight:900;
+  color:transparent;
+  background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--gold-l));
+  -webkit-background-clip:text; background-clip:text;
+  line-height:1; margin-bottom:8px;
+}
+.global-stat-lbl{
+  font-size:10px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--muted);
+}
+.global-stat-sub{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:13px; color:rgba(201,168,76,.55);
+  margin-top:5px;
+}
+@media(max-width:500px){
+  .global-grid{grid-template-columns:1fr;}
+  .global-stat:first-child{border-right:none;border-bottom:1px solid rgba(255,255,255,.06);}
+}
 </style>
 </head>
 <body>
@@ -231,6 +305,30 @@ footer{text-align:center;padding:20px;font-family:'Cormorant Garamond',serif;fon
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- ── CUMUL GLOBAL ── -->
+  <div class="global-section">
+    <div class="global-band">
+      <div class="global-header">
+        <div class="global-eyebrow">🏓 Pong · 🐍 Snake · 🏐 Spikeball</div>
+        <div class="global-title">Tous les jeux confondus</div>
+      </div>
+      <div class="global-grid">
+        <div class="global-stat">
+          <span class="global-stat-icon">🎮</span>
+          <div class="global-stat-val" id="global-parties">—</div>
+          <div class="global-stat-lbl">Parties jouées</div>
+          <div class="global-stat-sub" id="global-parties-sub"></div>
+        </div>
+        <div class="global-stat">
+          <span class="global-stat-icon">⏱️</span>
+          <div class="global-stat-val" id="global-temps">—</div>
+          <div class="global-stat-lbl">Temps de jeu</div>
+          <div class="global-stat-sub">estimé · tous jeux</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -481,6 +579,15 @@ async function loadAll() {
     renderPong(pong);
     renderSnake(snake);
     renderBalls(balls);
+
+    // ── Cumul global ──
+    const totalParties = pong.count + snake.count + balls.count;
+    const totalSec     = pong.estSec + snake.estSec + balls.estSec;
+
+    document.getElementById('global-parties').textContent = totalParties.toLocaleString('fr-FR');
+    document.getElementById('global-parties-sub').textContent =
+      `${pong.count} Pong · ${snake.count} Snake · ${balls.count} Spikeball`;
+    document.getElementById('global-temps').textContent = fmtDuration(totalSec);
   } catch(e) { console.error(e); }
 
   btn.textContent = '⟳  Actualiser les scores'; btn.style.opacity='1';
