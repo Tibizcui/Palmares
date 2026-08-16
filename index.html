@@ -12,6 +12,13 @@
   --gold:#C9A84C;  --gold-l:#F0D080; --gold-d:#8A6B20;
   --blush:#E8C8C0; --cream:#FAF6EE;  --muted:#8A7E72;
   --pong:#C9A84C;  --snake:#5A9E5A;  --balls:#9B59B6;
+
+  /* Paliers de difficulté */
+  --t-insane:#F0503C; --t-insane-2:#FFB347;
+  --t-hard:#E0862F;
+  --t-medium:#4C8CE0;
+  --t-easy:#5AA86A;
+  --t-none:#8A7E72;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -36,9 +43,24 @@ body{background:var(--night);font-family:'Montserrat',sans-serif;color:var(--cre
 .hero-date{margin-top:10px;font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);opacity:0;animation:fadeUp .8s .8s forwards;}
 .ornament{font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:22px;margin:20px 0 0;letter-spacing:.3em;opacity:0;animation:fadeUp .8s 1s forwards;}
 
-.status-bar{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:40px;opacity:0;animation:fadeUp .8s 1.8s forwards;}
+.status-bar{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:28px;opacity:0;animation:fadeUp .8s 1.8s forwards;}
 .live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4ADE80;box-shadow:0 0 8px #4ADE80;animation:blink 1.5s ease-in-out infinite;vertical-align:middle;margin-right:6px;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ── Légende difficulté ── */
+.diff-legend{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:10px 14px;
+  margin:0 auto 44px;max-width:720px;
+  opacity:0;animation:fadeUp .8s 2s forwards;
+}
+.legend-chip{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:6px 14px;border-radius:999px;
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;
+  border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);
+}
+.legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.legend-arrow{color:var(--muted);font-size:12px;align-self:center;letter-spacing:0;}
 
 /* ── Podiums ── */
 .podiums-section{width:100%;max-width:1100px;margin:0 auto 60px;}
@@ -90,29 +112,65 @@ body{background:var(--night);font-family:'Montserrat',sans-serif;color:var(--cre
   margin-top:2px; font-style:italic;
 }
 
-/* ── Podium entries ── */
-.podium-list{padding:4px 0 16px;}
-.podium-entry{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.04);position:relative;transition:background .2s;}
+/* ── Podium (paliers) ── */
+.podium-list{padding:6px 0 14px;}
+
+.tier-group{position:relative;}
+.tier-header{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 16px 8px;
+}
+.tier-header .tier-line{flex:1;height:1px;background:linear-gradient(to right,currentColor,transparent);opacity:.35;}
+.tier-header .tier-line.right{background:linear-gradient(to left,currentColor,transparent);}
+.tier-label{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;
+  white-space:nowrap;
+}
+.tier-count{font-size:9px;color:var(--muted);letter-spacing:.1em;margin-left:2px;}
+
+.tier-insane .tier-label{color:var(--t-insane-2);}
+.tier-hard   .tier-label{color:var(--t-hard);}
+.tier-medium .tier-label{color:var(--t-medium);}
+.tier-easy   .tier-label{color:var(--t-easy);}
+.tier-none   .tier-label{color:var(--muted);}
+.tier-insane{color:var(--t-insane);}
+.tier-hard{color:var(--t-hard);}
+.tier-medium{color:var(--t-medium);}
+.tier-easy{color:var(--t-easy);}
+.tier-none{color:var(--t-none);}
+
+.podium-entry{display:flex;align-items:center;gap:12px;padding:9px 16px;border-bottom:1px solid rgba(255,255,255,.04);position:relative;transition:background .2s;}
 .podium-entry:last-child{border-bottom:none;}
 .podium-entry:hover{background:rgba(255,255,255,.03);}
-.podium-entry.rank-1{padding:16px 16px;background:rgba(201,168,76,.07);border-bottom:1px solid rgba(201,168,76,.1);}
-.podium-entry.rank-1::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--gold-l),var(--gold));border-radius:0 2px 2px 0;}
-.rank-badge{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;min-width:36px;text-align:center;line-height:1;flex-shrink:0;}
-.rank-1 .rank-badge{font-size:28px;}
+.podium-entry::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:currentColor;opacity:.5;}
+.tier-insane .podium-entry::before{opacity:.7;}
+
+.podium-entry.is-top{padding:16px;background:rgba(240,80,60,.08);}
+.podium-entry.is-top::before{width:4px;opacity:1;box-shadow:0 0 14px currentColor;}
+.podium-entry.is-top{animation:glowTop 3s ease-in-out infinite;}
+@keyframes glowTop{0%,100%{background:rgba(240,80,60,.07)}50%{background:rgba(240,80,60,.14)}}
+
+.rank-badge{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;min-width:34px;text-align:center;line-height:1;flex-shrink:0;color:var(--cream);}
+.is-top .rank-badge{font-size:26px;}
 .entry-info{flex:1;min-width:0;}
 .entry-name{font-weight:600;font-size:13px;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.rank-1 .entry-name{font-size:16px;font-family:'Playfair Display',serif;}
+.is-top .entry-name{font-size:16px;font-family:'Playfair Display',serif;}
 .entry-detail{font-size:10px;color:var(--muted);margin-top:2px;letter-spacing:.06em;}
 .entry-score{font-family:'Playfair Display',serif;font-weight:700;font-size:15px;color:var(--gold);text-align:right;flex-shrink:0;}
-.rank-1 .entry-score{font-size:20px;color:var(--gold-l);}
+.is-top .entry-score{font-size:20px;color:var(--gold-l);}
+
+/* Petit badge de palier sur chaque ligne */
+.diff-pill{
+  display:inline-block;margin-left:7px;padding:1px 7px;border-radius:999px;
+  font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  border:1px solid currentColor;line-height:1.5;vertical-align:middle;
+}
+.tier-more{font-size:10px;color:var(--muted);font-style:italic;padding:8px 16px 4px;text-align:center;letter-spacing:.06em;}
 
 .skeleton{height:14px;border-radius:4px;background:linear-gradient(90deg,rgba(255,255,255,.05) 25%,rgba(255,255,255,.1) 50%,rgba(255,255,255,.05) 75%);background-size:200%;animation:skeleton-shimmer 1.5s infinite;}
 @keyframes skeleton-shimmer{0%{background-position:200%}100%{background-position:-200%}}
 .no-scores{text-align:center;color:var(--muted);font-style:italic;font-size:12px;padding:24px 16px;}
-
-/* ── Podium rank-1 pulse ── */
-.rank-1{animation:glowPulse 3s ease-in-out infinite;}
-@keyframes glowPulse{0%,100%{background:rgba(201,168,76,.07)}50%{background:rgba(201,168,76,.13)}}
 
 /* ── Champions ── */
 .champions-section{width:100%;max-width:1100px;margin:0 auto 60px;opacity:0;animation:fadeUp 1s 2.4s forwards;}
@@ -126,6 +184,7 @@ body{background:var(--night);font-family:'Montserrat',sans-serif;color:var(--cre
 .champion-game{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
 .champion-name{font-family:'Playfair Display',serif;font-size:clamp(18px,3vw,28px);font-weight:700;color:var(--cream);margin-bottom:6px;line-height:1.1;}
 .champion-score{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--gold);}
+.champion-badge{display:inline-block;margin-top:10px;padding:2px 10px;border-radius:999px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;border:1px solid currentColor;}
 
 /* ── Refresh ── */
 .refresh-wrap{text-align:center;margin-bottom:40px;opacity:0;animation:fadeUp .8s 2.8s forwards;}
@@ -246,12 +305,23 @@ footer{text-align:center;padding:20px;font-family:'Cormorant Garamond',serif;fon
 
   <div class="status-bar">
     <span class="live-dot"></span>
-    Classements en temps réel · Mise à jour automatique toutes les 30 s
+    Classements en temps réel · Classés par niveau de difficulté · Mise à jour toutes les 30 s
+  </div>
+
+  <!-- ── Légende des paliers ── -->
+  <div class="diff-legend" id="diff-legend">
+    <span class="legend-chip" style="color:var(--t-insane-2)"><span class="legend-dot" style="background:var(--t-insane)"></span>⚡ Insane</span>
+    <span class="legend-arrow">▸</span>
+    <span class="legend-chip" style="color:var(--t-hard)"><span class="legend-dot" style="background:var(--t-hard)"></span>🔥 Difficile</span>
+    <span class="legend-arrow">▸</span>
+    <span class="legend-chip" style="color:var(--t-medium)"><span class="legend-dot" style="background:var(--t-medium)"></span>◆ Normal</span>
+    <span class="legend-arrow">▸</span>
+    <span class="legend-chip" style="color:var(--t-easy)"><span class="legend-dot" style="background:var(--t-easy)"></span>● Facile</span>
   </div>
 
   <!-- ── PODIUMS ── -->
   <div class="podiums-section">
-    <div class="section-title">Meilleurs scores par jeu</div>
+    <div class="section-title">Classement par niveau de difficulté · jeu par jeu</div>
     <div class="podiums-grid">
 
       <!-- PONG -->
@@ -340,25 +410,28 @@ footer{text-align:center;padding:20px;font-family:'Cormorant Garamond',serif;fon
       <span style="flex:1;height:1px;background:linear-gradient(to left,transparent,rgba(201,168,76,.3))"></span>
     </div>
     <div class="champions-title">Hall of Fame</div>
-    <div class="champions-sub">Les meilleurs de chaque arène</div>
+    <div class="champions-sub">Le meilleur de chaque arène · au plus haut niveau atteint</div>
     <div class="champions-row">
       <div class="champion-card">
         <span class="champion-trophy">🏆</span>
         <div class="champion-game">🏓 Champion Pong</div>
         <div class="champion-name" id="champ-pong-name">—</div>
         <div class="champion-score" id="champ-pong-score"></div>
+        <div id="champ-pong-badge"></div>
       </div>
       <div class="champion-card">
         <span class="champion-trophy">🏆</span>
         <div class="champion-game">🐍 Champion Snake</div>
         <div class="champion-name" id="champ-snake-name">—</div>
         <div class="champion-score" id="champ-snake-score"></div>
+        <div id="champ-snake-badge"></div>
       </div>
       <div class="champion-card">
         <span class="champion-trophy">🏆</span>
         <div class="champion-game">🏐 Champion Spikeball</div>
         <div class="champion-name" id="champ-balls-name">—</div>
         <div class="champion-score" id="champ-balls-score"></div>
+        <div id="champ-balls-badge"></div>
       </div>
     </div>
   </div>
@@ -367,7 +440,7 @@ footer{text-align:center;padding:20px;font-family:'Cormorant Garamond',serif;fon
     <button class="btn-refresh" id="refreshBtn" onclick="loadAll()">⟳ &nbsp; Actualiser les scores</button>
   </div>
 
-  <footer>Créé avec ❤️ pour le mariage · Que le meilleur gagne !</footer>
+  <footer>Créé avec ❤️ pour le mariage · Que le plus courageux gagne !</footer>
 
 </div>
 
@@ -383,6 +456,42 @@ function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
 
 document.getElementById('hero-date').textContent =
   new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+/* ══════════════════════════════════════
+   PALIERS DE DIFFICULTÉ
+   Ordre de prestige : Insane > Difficile > Normal > Facile
+══════════════════════════════════════ */
+const TIER_ORDER = ['insane','hard','medium','easy','none'];
+const TIER_META = {
+  insane:{ label:'Insane',   icon:'⚡', cssVar:'--t-insane',  labelVar:'--t-insane-2', cls:'tier-insane' },
+  hard:  { label:'Difficile',icon:'🔥', cssVar:'--t-hard',    labelVar:'--t-hard',     cls:'tier-hard'   },
+  medium:{ label:'Normal',   icon:'◆',  cssVar:'--t-medium',  labelVar:'--t-medium',   cls:'tier-medium' },
+  easy:  { label:'Facile',   icon:'●',  cssVar:'--t-easy',    labelVar:'--t-easy',     cls:'tier-easy'   },
+  none:  { label:'Tous niveaux', icon:'•', cssVar:'--t-none', labelVar:'--t-none',     cls:'tier-none'   },
+};
+const TIER_RANK = { insane:4, hard:3, medium:2, easy:1, none:0 };
+
+/* Normalise n'importe quelle valeur de difficulté vers une clé de palier connue.
+   Robuste aux synonymes FR/EN. Renvoie 'none' si rien d'exploitable. */
+function normalizeDiff(v){
+  const s = String(v||'').trim().toLowerCase();
+  if (!s) return 'none';
+  if (['insane','extreme','extrême','impossible','démon','demon'].includes(s)) return 'insane';
+  if (['hard','difficile','dur','hardcore'].includes(s)) return 'hard';
+  if (['medium','normal','moyen','intermédiaire','intermediaire'].includes(s)) return 'medium';
+  if (['easy','facile','simple','débutant','debutant'].includes(s)) return 'easy';
+  return 'none';
+}
+
+/* Cherche une difficulté dans une ligne, où qu'elle soit stockée.
+   Aujourd'hui : Pong l'a dans "tag". Snake/Spikeball : dès qu'une colonne
+   diff / difficulty / level / niveau existera, elle sera prise en compte
+   automatiquement (les requêtes ci-dessous utilisent select=*). */
+function diffOf(row){
+  return normalizeDiff(row.diff ?? row.difficulty ?? row.level ?? row.niveau ?? row.tag);
+}
+
+const MAX_PER_TIER = 5; // nb de joueurs affichés par palier
 
 /* ══════════════════════════════════════
    DURÉE — formatage j h m s
@@ -401,10 +510,6 @@ function fmtDuration(totalSeconds) {
 
 /* ══════════════════════════════════════
    STATS BAR RENDERER
-   Durée estimée par jeu :
-   - Pong     : 3 min/partie (durée moyenne d'une manche)
-   - Snake    : 30s + 15s par ❤️ mangé  (plus on mange, plus ça dure)
-   - Spikeball: 3s par balle (3 s / balle moyenne en jeu)
 ══════════════════════════════════════ */
 function renderStats(game, count, totalPts, estimatedSeconds, pointLabel) {
   const el = document.getElementById(`stats-${game}`);
@@ -425,137 +530,182 @@ function renderStats(game, count, totalPts, estimatedSeconds, pointLabel) {
 }
 
 /* ══════════════════════════════════════
-   PONG — charge TOUT pour les stats
-   (filtre easy/medium/hard/insane)
+   RENDU GÉNÉRIQUE DU PODIUM PAR PALIERS
+   entries : [{name, diff, score_str, detail, sortKey}]
+   Renvoie le champion (meilleur joueur du palier le plus élevé).
 ══════════════════════════════════════ */
-async function fetchPong() {
-  // Top 5 pour le podium
-  const rTop = await fetch(
-    `${SB_URL}/rest/v1/scores?select=name,won,lost,tag,score_str,game_date,winner&tag=in.(easy,medium,hard,insane)&order=won.desc&limit=200`,
-    { headers: SB_H }
-  );
-  if (!rTop.ok) throw new Error();
-  const all = (await rTop.json()).filter(e => e.name);
+function renderTiered(game, entries, opts){
+  const el = document.getElementById(`list-${game}`);
+  if (!entries.length){
+    el.innerHTML = '<div class="no-scores">Aucune partie encore</div>';
+    return null;
+  }
 
-  const diffW = { insane:4, hard:3, medium:2, easy:1 };
-  const sorted = all
-    .map(e => ({ ...e, score_str: e.score_str || `${e.won}–${e.lost}` }))
-    .sort((a,b) => {
-      const dd = (diffW[b.tag]||0) - (diffW[a.tag]||0);
-      if (dd) return dd;
-      const ww = (b.winner==='player'?1:0) - (a.winner==='player'?1:0);
-      if (ww) return ww;
-      return b.won !== a.won ? b.won - a.won : a.lost - b.lost;
-    });
+  // Regroupe par palier
+  const groups = {};
+  entries.forEach(e => { (groups[e.diff] ||= []).push(e); });
 
-  // Stats globales
-  const count     = all.length;
-  const totalPts  = all.reduce((s,e) => s + (e.won||0) + (e.lost||0), 0);
-  const estSec    = count * 3 * 60; // ~3 min/partie
+  // Trie chaque palier par score décroissant
+  Object.values(groups).forEach(g => g.sort((a,b) => b.sortKey - a.sortKey));
 
-  return { top5: sorted.slice(0,5), count, totalPts, estSec };
-}
+  // Combien de paliers réellement présents ?
+  const presentTiers = TIER_ORDER.filter(t => groups[t] && groups[t].length);
+  const singleNone = presentTiers.length === 1 && presentTiers[0] === 'none';
 
-function renderPong({ top5, count, totalPts, estSec }) {
-  renderStats('pong', count, totalPts, estSec, 'Points marqués');
-  const el = document.getElementById('list-pong');
-  if (!top5.length) { el.innerHTML='<div class="no-scores">Aucune partie encore</div>'; return; }
-  const diffLabel = { easy:'Facile', medium:'Normal', hard:'Difficile', insane:'⚡ Insane' };
-  el.innerHTML = top5.map((e,i) => {
-    const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
-    return `<div class="podium-entry rank-${i+1}">
-      <div class="rank-badge">${medal}</div>
-      <div class="entry-info">
-        <div class="entry-name">${esc(e.name)}</div>
-        <div class="entry-detail">${diffLabel[e.tag]||e.tag} · ${e.winner==='player'?'Victoire':'Défaite'}</div>
-      </div>
-      <div class="entry-score">${esc(e.score_str)}</div>
-    </div>`;
+  let champion = null;
+  let overallFirst = true;
+  const html = presentTiers.map(tierKey => {
+    const meta  = TIER_META[tierKey];
+    const list  = groups[tierKey];
+    const shown = list.slice(0, MAX_PER_TIER);
+    const extra = list.length - shown.length;
+
+    // En-tête de palier (masqué si un seul groupe "none" = jeu sans niveaux)
+    const header = singleNone ? '' : `
+      <div class="tier-header ${meta.cls}">
+        <span class="tier-line"></span>
+        <span class="tier-label">${meta.icon} ${meta.label}<span class="tier-count">${list.length}</span></span>
+        <span class="tier-line right"></span>
+      </div>`;
+
+    const rows = shown.map((e,i) => {
+      const isTop = overallFirst; overallFirst = false;
+      if (isTop) champion = { ...e, tier: tierKey };
+      const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
+      const pill = (tierKey!=='none')
+        ? `<span class="diff-pill" style="color:var(${meta.labelVar})">${meta.label}</span>` : '';
+      return `<div class="podium-entry ${meta.cls} ${isTop?'is-top':''}">
+        <div class="rank-badge">${medal}</div>
+        <div class="entry-info">
+          <div class="entry-name">${esc(e.name)}${pill}</div>
+          <div class="entry-detail">${esc(e.detail||'')}</div>
+        </div>
+        <div class="entry-score">${esc(e.score_str)}</div>
+      </div>`;
+    }).join('');
+
+    const more = extra>0 ? `<div class="tier-more">+${extra} autre${extra>1?'s':''}</div>` : '';
+    return `<div class="tier-group">${header}${rows}${more}</div>`;
   }).join('');
-  setChampion('pong', top5[0]?.name, top5[0]?.score_str);
+
+  el.innerHTML = html;
+  return champion;
 }
 
 /* ══════════════════════════════════════
-   SNAKE
+   PONG — la difficulté est dans "tag"
+══════════════════════════════════════ */
+async function fetchPong() {
+  const r = await fetch(
+    `${SB_URL}/rest/v1/scores?select=*&tag=in.(easy,medium,hard,insane)&order=won.desc&limit=500`,
+    { headers: SB_H }
+  );
+  if (!r.ok) throw new Error('pong');
+  const rows = (await r.json()).filter(e => e.name);
+
+  const entries = rows.map(e => {
+    const win = e.winner === 'player' ? 1 : 0;
+    return {
+      name: e.name,
+      diff: diffOf(e),
+      score_str: e.score_str || `${e.won}–${e.lost}`,
+      detail: (win ? 'Victoire' : 'Défaite'),
+      // tri intra-palier : victoire d'abord, puis écart de points
+      sortKey: win*1e6 + (e.won||0)*1000 - (e.lost||0),
+    };
+  });
+
+  const count    = rows.length;
+  const totalPts = rows.reduce((s,e) => s + (e.won||0) + (e.lost||0), 0);
+  const estSec   = count * 3 * 60; // ~3 min/partie
+  return { entries, count, totalPts, estSec };
+}
+
+function renderPong({ entries, count, totalPts, estSec }) {
+  renderStats('pong', count, totalPts, estSec, 'Points marqués');
+  const champ = renderTiered('pong', entries);
+  setChampion('pong', champ, c => c.score_str);
+}
+
+/* ══════════════════════════════════════
+   SNAKE — pas encore de niveau en base (prêt via diffOf)
 ══════════════════════════════════════ */
 async function fetchSnake() {
   const r = await fetch(
-    `${SB_URL}/rest/v1/scores?select=name,won,game_date&tag=eq.snake&order=won.desc,ts.asc&limit=500`,
+    `${SB_URL}/rest/v1/scores?select=*&tag=eq.snake&order=won.desc,ts.asc&limit=500`,
     { headers: SB_H }
   );
-  if (!r.ok) throw new Error();
-  const all = (await r.json()).filter(e => e.name);
+  if (!r.ok) throw new Error('snake');
+  const rows = (await r.json()).filter(e => e.name);
 
-  const count    = all.length;
-  const totalPts = all.reduce((s,e) => s + (e.won||0), 0);
-  // 30s de base + 15s par ❤️ mangé (moyenne pondérée)
-  const estSec   = all.reduce((s,e) => s + 30 + (e.won||0) * 15, 0);
+  const entries = rows.map(e => ({
+    name: e.name,
+    diff: diffOf(e),
+    score_str: `${e.won} ❤️`,
+    detail: e.game_date || '',
+    sortKey: e.won || 0,
+  }));
 
-  return { top5: all.slice(0,5), count, totalPts, estSec };
+  const count    = rows.length;
+  const totalPts = rows.reduce((s,e) => s + (e.won||0), 0);
+  const estSec   = rows.reduce((s,e) => s + 30 + (e.won||0) * 15, 0);
+  return { entries, count, totalPts, estSec };
 }
 
-function renderSnake({ top5, count, totalPts, estSec }) {
+function renderSnake({ entries, count, totalPts, estSec }) {
   renderStats('snake', count, totalPts, estSec, '❤️ mangés');
-  const el = document.getElementById('list-snake');
-  if (!top5.length) { el.innerHTML='<div class="no-scores">Aucune partie encore</div>'; return; }
-  el.innerHTML = top5.map((e,i) => {
-    const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
-    return `<div class="podium-entry rank-${i+1}">
-      <div class="rank-badge">${medal}</div>
-      <div class="entry-info">
-        <div class="entry-name">${esc(e.name)}</div>
-        <div class="entry-detail">${esc(e.game_date||'')}</div>
-      </div>
-      <div class="entry-score">${e.won} ❤️</div>
-    </div>`;
-  }).join('');
-  setChampion('snake', top5[0]?.name, `${top5[0]?.won} ❤️ mangés`);
+  const champ = renderTiered('snake', entries);
+  setChampion('snake', champ, c => `${c.score_str} mangés`);
 }
 
 /* ══════════════════════════════════════
-   SPIKEBALL
+   SPIKEBALL — pas encore de niveau en base (prêt via diffOf)
 ══════════════════════════════════════ */
 async function fetchBalls() {
   const r = await fetch(
-    `${SB_URL}/rest/v1/scores?select=name,won,game_date&tag=eq.balls&order=won.desc,ts.asc&limit=500`,
+    `${SB_URL}/rest/v1/scores?select=*&tag=eq.balls&order=won.desc,ts.asc&limit=500`,
     { headers: SB_H }
   );
-  if (!r.ok) throw new Error();
-  const all = (await r.json()).filter(e => e.name);
+  if (!r.ok) throw new Error('balls');
+  const rows = (await r.json()).filter(e => e.name);
 
-  const count    = all.length;
-  const totalPts = all.reduce((s,e) => s + (e.won||0), 0);
-  // 3s de base + 3s par balle en jeu (les balles restent en l'air)
-  const estSec   = all.reduce((s,e) => s + 10 + (e.won||0) * 3 * 3, 0);
+  const entries = rows.map(e => ({
+    name: e.name,
+    diff: diffOf(e),
+    score_str: `${e.won} 🏐`,
+    detail: e.game_date || '',
+    sortKey: e.won || 0,
+  }));
 
-  return { top5: all.slice(0,5), count, totalPts, estSec };
+  const count    = rows.length;
+  const totalPts = rows.reduce((s,e) => s + (e.won||0), 0);
+  const estSec   = rows.reduce((s,e) => s + 10 + (e.won||0) * 3 * 3, 0);
+  return { entries, count, totalPts, estSec };
 }
 
-function renderBalls({ top5, count, totalPts, estSec }) {
+function renderBalls({ entries, count, totalPts, estSec }) {
   renderStats('balls', count, totalPts, estSec, '🏐 Balles');
-  const el = document.getElementById('list-balls');
-  if (!top5.length) { el.innerHTML='<div class="no-scores">Aucune partie encore</div>'; return; }
-  el.innerHTML = top5.map((e,i) => {
-    const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
-    return `<div class="podium-entry rank-${i+1}">
-      <div class="rank-badge">${medal}</div>
-      <div class="entry-info">
-        <div class="entry-name">${esc(e.name)}</div>
-        <div class="entry-detail">${esc(e.game_date||'')}</div>
-      </div>
-      <div class="entry-score">${e.won} 🏐</div>
-    </div>`;
-  }).join('');
-  setChampion('balls', top5[0]?.name, `${top5[0]?.won} balles simultanées`);
+  const champ = renderTiered('balls', entries);
+  setChampion('balls', champ, c => `${c.score_str} simultanées`);
 }
 
 /* ══════════════════════════════════════
    HALL OF FAME
 ══════════════════════════════════════ */
-function setChampion(game, name, score) {
-  if (!name) return;
-  document.getElementById(`champ-${game}-name`).textContent  = name;
-  document.getElementById(`champ-${game}-score`).textContent = score;
+function setChampion(game, champ, scoreFmt) {
+  if (!champ || !champ.name) return;
+  document.getElementById(`champ-${game}-name`).textContent  = champ.name;
+  document.getElementById(`champ-${game}-score`).textContent = scoreFmt(champ);
+
+  const badgeEl = document.getElementById(`champ-${game}-badge`);
+  if (badgeEl) {
+    if (champ.tier && champ.tier !== 'none') {
+      const m = TIER_META[champ.tier];
+      badgeEl.innerHTML = `<span class="champion-badge" style="color:var(${m.labelVar})">${m.icon} Niveau ${m.label}</span>`;
+    } else {
+      badgeEl.innerHTML = '';
+    }
+  }
   burstConfetti();
 }
 
